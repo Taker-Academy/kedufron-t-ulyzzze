@@ -1,4 +1,5 @@
 const dataApi = fetch('https://api.kedufront.juniortaker.com/item/');
+
 dataApi.then(async (response_data) => {
     const response = await response_data.json();
     try {
@@ -69,26 +70,48 @@ const addToCart = (product_id) => {
     addCartToHTML();
 }
 
+fetch('https://api.kedufront.juniortaker.com/item/')
+    .then(response => response.json())
+    .then(data => {
+        productsData = data;
+        addCartToHTML(); // Appelez la fonction pour afficher le panier une fois les données récupérées
+    })
+    .catch(error => console.error('Erreur lors de la récupération des données de l\'API:', error));
+
+// Modifiez la fonction addCartToHTML pour utiliser les données stockées dans la variable globale
 const addCartToHTML = () => {
     listCartHTML.innerHTML = '';
-    if (carts.length > 0){
+    if (carts.length > 0) {
         carts.forEach(cart => {
             let newCart = document.createElement('div');
             newCart.classList.add('item');
-            let positionProduct = 
             newCart.innerHTML = `
             <div class="article">
-                <div id="image_01"></div>
-                <h2 id="name_${cart.product_id}" class="name_0"></h2>
-                <p id="price_0"></p>
+                <div id="image_${cart.product_id}"></div>
+                <h2 id="name_${cart.product_id}"></h2>
+                <p id="price_${cart.product_id}"></p>
                 <div class="quantity">
                     <span class="minus">-</span>
-                    <span>${cart.quantity}</span>
+                    <span class="qty">${cart.quantity}</span>
                     <span class="plus">+</span>
                 </div>
             </div>
             `;
             listCartHTML.appendChild(newCart);
+
+            // Récupérez les informations sur le produit à partir de son ID
+            const product = productsData.find(item => item.image === cart.product_id);
+            if (product) {
+                const affichage_price = document.querySelector(`#price_${cart.product_id}`);
+                affichage_price.innerHTML = `${product.price} €`;
+                const affichage_name = document.querySelector(`#name_${cart.product_id}`);
+                affichage_name.innerHTML = `${product.name}`;
+            }
+
+            // Ajouter l'image du produit
+            const affichage_image = document.querySelector(`#image_${cart.product_id}`);
+            const image = `<img src="https://api.kedufront.juniortaker.com/item/picture/${cart.product_id}" class="image_${cart.product_id}"></img>`;
+            affichage_image.insertAdjacentHTML("afterbegin", image);
         })
     }
 }
