@@ -81,7 +81,7 @@ const addCartToHTML = () => {
             <div class="article">
                 <div id="image_${cart.product_id}"></div>
                 <h2 id="names_${cart.product_id}"></h2>
-                <p id="price_${cart.product_id}"></p>
+                <p id="prices_${cart.product_id}"></p>
                 <div class="quantity">
                     <span class="minus">-</span>
                     <span class="qty">${cart.quantity}</span>
@@ -91,13 +91,25 @@ const addCartToHTML = () => {
             `;
             listCartHTML.appendChild(newCart);
 
-            const affichage_names = document.querySelector(`#names_${cart.product_id}`);
-            const names = "Salut"
-            affichage_names.innerHTML = names;
+            dataApi.then(async (response_data) => {
+                const response = await response_data.json();
+                try {
+                    const names = response[cart.product_id].name;
+                    const prices = response[cart.product_id].price;
+        
+                    const affichage_names = document.querySelector(`#names_${cart.product_id}`);
+                    const affichage_prices = document.querySelector(`#prices_${cart.product_id}`);
 
+                    affichage_names.innerHTML = names;
+                    affichage_prices.innerHTML = `${prices} €`;
+
+                } catch(err){
+                    console.log(err);
+                }
+            })
             // Ajouter l'image du produit
             const affichage_image = document.querySelector(`#image_${cart.product_id}`);
-            const image = `<img src="https://api.kedufront.juniortaker.com/item/picture/${cart.product_id}" class="image_${cart.product_id}"></img>`;
+            const image = `<img src="https://api.kedufront.juniortaker.com/item/picture/${cart.product_id}" class="image_0${cart.product_id}"></img>`;
             affichage_image.insertAdjacentHTML("afterbegin", image);
         })
     }
