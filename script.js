@@ -72,7 +72,6 @@ const addToCart = (product_id) => {
     }
     console.log(carts);
     addCartToHTML();
-    addCartToMemory();
 }
 
 //Afficher un produit au panier
@@ -159,7 +158,7 @@ const changeQuantity = (product_id, type) => {
     addCartToHTML();
 }
 
-//Savoir quelle article a était cliqué 
+//Newpage
 listProductHTML.addEventListener('click', (event) => {
     let positionClick = event.target;
     if (positionClick.classList.contains('article')){
@@ -167,3 +166,28 @@ listProductHTML.addEventListener('click', (event) => {
         newPage(product_id);
     }
 })
+
+
+
+
+//Page ou le client entre les informations nécessaires pour la commande
+listProductHTML.addEventListener('click', (event) => {
+    let positionClick = event.target;
+    if (positionClick.classList.contains('checkOut')){
+        let product_id = positionClick.dataset.id;
+        clientInfo(product_id);
+    }
+})
+
+//Afficher la page de l'article
+const clientInfo = (productId) => {
+    const ClientDiv = document.createElement('div');
+    ClientDiv.classList.add('clientInformation');
+    ClientDiv.dataset.id = productId
+    ClientDiv.innerHTML = `
+        <div class="testtttt">
+        </div>
+    `
+    document.body.innerHTML = '';
+    document.body.appendChild(ClientDiv);
+}
