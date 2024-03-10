@@ -295,3 +295,9 @@ footer {
 .bigarticle{
     font-size: 1.8rem;
 }
+
+.bigarticle i{
+    font-size: 3rem;
+    padding-bottom: 30px;
+    cursor: pointer;
+}

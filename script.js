@@ -75,11 +75,6 @@ const addToCart = (product_id) => {
     addCartToMemory();
 }
 
-//Ajouter l'article dans la mémoire (en cours)
-const addCartToMemory = () => {
-    localStorage.setItem('cart', JSON.stringify(carts));
-}
-
 //Afficher un produit au panier
 const addCartToHTML = async () => {
     listCartHTML.innerHTML = '';
