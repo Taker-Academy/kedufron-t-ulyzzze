@@ -166,42 +166,8 @@ const changeQuantity = (product_id, type) => {
 //Savoir quelle article a était cliqué 
 listProductHTML.addEventListener('click', (event) => {
     let positionClick = event.target;
-    if (positionClick.classList.contains('article') || positionClick.classList.contains('image')){
+    if (positionClick.classList.contains('article')){
         let product_id = positionClick.dataset.id;
         newPage(product_id);
     }
 })
-
-const newPage = (productId) => {
-    // Interroger l'API pour récupérer les données du produit
-    fetch(`https://api.kedufront.juniortaker.com/item/${productId}`)
-        .then(response => response.json())
-        .then(data => {
-            // Créer un élément div pour la nouvelle page
-            const newPageDiv = document.createElement('div');
-            newPageDiv.classList.add('oneItemPage');
-            newPageDiv.dataset.id = productId;
-
-            // Remplir les éléments avec les données du produit
-            newPageDiv.innerHTML = `
-                <div class="bigarticle">
-                    <div id="image_${productId}"></div>
-                    <h2 id="names_${productId}">${data.name}</h2>
-                    <p id="description_${productId}">${data.description}</p>
-                    <p id="creation">Crée en : ${data.createdIn}</p>
-                    <p id="prices_${productId}">${data.price} €</p>
-                    <button class="addCart">Ajouter au panier</button>
-                </div>
-            `;
-
-            // Ajouter la nouvelle page à la page principale
-            document.body.innerHTML = ''; // Effacer le contenu existant
-            document.body.appendChild(newPageDiv); // Ajouter la nouvelle page à la page principale
-            const affichage_image = document.querySelector(`#image_${productId}`);
-            const image = `<img src="https://api.kedufront.juniortaker.com/item/picture/${productId}" class="bigimage"></img>`;
-            affichage_image.insertAdjacentHTML("afterbegin", image);
-        })
-        .catch(error => {
-            console.error('Erreur lors de la récupération des données du produit :', error);
-        });
-}
