@@ -128,7 +128,6 @@ const addCartToHTML = async () => {
     iconCartSpan.innerText = totalQuantity;
 }
 
-
 //Ajouter | Enlever un ou plusieurs articles grâces aux boutons '>' et '<'
 listCartHTML.addEventListener('click', (event) => {
     let positionClick = event.target;
@@ -162,4 +161,43 @@ const changeQuantity = (product_id, type) => {
         }
     }
     addCartToHTML();
+}
+
+//Savoir quelle article a était cliqué 
+listProductHTML.addEventListener('click', (event) => {
+    let positionClick = event.target;
+    if (positionClick.classList.contains('article')){
+        let product_id = positionClick.dataset.id;
+        newPage(product_id);
+    }
+})
+
+const newPage = (productId) => {
+    // Créer un élément div pour la nouvelle page
+    const newPageDiv = document.createElement('div');
+    newPageDiv.classList.add('item');
+    newPageDiv.dataset.id = productId;
+
+    newPageDiv.innerHTML = `
+        <div class="article">
+            <div id="image_${cart.product_id}"></div>
+            <h2 id="names_${cart.product_id}">Salut</h2>
+            <p id="prices_${cart.product_id}">€</p>
+            <div class="quantity">
+                <span class="minus">-</span>
+                <span class="qty">${cart.quantity}</span>
+                <span class="plus">+</span>
+            </div>
+        </div>
+        `;
+
+    newPageDiv.style.width = '100%';
+    newPageDiv.style.height = '100vh'; // Utilisation de toute la hauteur de la fenêtre
+    newPageDiv.style.backgroundColor = 'blue'; // Fond bleu
+
+    // Ajouter du texte ou d'autres contenus si nécessaire
+
+    // Remplacer le contenu de la page actuelle par la nouvelle page
+    document.body.innerHTML = ''; // Effacer le contenu existant
+    document.body.appendChild(newPageDiv); // Ajouter la nouvelle page à la page principale
 }

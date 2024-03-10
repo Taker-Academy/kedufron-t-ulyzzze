@@ -272,6 +272,12 @@ body.showCart .home{
     background-color: var(--second-bg-color);
 }
 
-footer{
+footer {
     padding-top: 50px;
+}
+
+.second_page{
+    width: 100%;
+    height: 100px;
+    background-color: red;
 }
