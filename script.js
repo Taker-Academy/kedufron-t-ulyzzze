@@ -54,23 +54,43 @@ let carts = [];
 let listCartHTML = document.querySelector('.listCart');
 let iconCartSpan = document.querySelector('.Cart span');
 
+window.addEventListener('load', () => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+        carts = JSON.parse(savedCart);
+        addCartToHTML();
+    }
+});
+
+// Sauvegarder le panier dans localStorage
+const saveCartToLocalStorage = () => {
+    localStorage.setItem('cart', JSON.stringify(carts));
+}
+
+// Vider le panier
+const clearCart = () => {
+    carts = [];
+    saveCartToLocalStorage();
+    addCartToHTML();
+}
+
 //Ajouter un produti au panier
 const addToCart = (product_id) => {
     let product_position_in_cart = carts.findIndex((value) => value.product_id == product_id);
-    if (carts.length <= 0){
+    if (carts.length <= 0) {
         carts = [{
             product_id: product_id,
             quantity: 1
         }]
-    } else if (product_position_in_cart < 0){
+    } else if (product_position_in_cart < 0) {
         carts.push({
             product_id: product_id,
             quantity: 1
         })
-    } else{
+    } else {
         carts[product_position_in_cart].quantity += 1;
     }
-    console.log(carts);
+    saveCartToLocalStorage();
     addCartToHTML();
 }
 
@@ -82,7 +102,6 @@ const addCartToHTML = async () => {
         for (const cart of carts) {
             try {
                 totalQuantity = totalQuantity + cart.quantity;
-                // Récupérer les données du produit depuis l'API
                 const response = await fetch(`https://api.kedufront.juniortaker.com/item/${cart.product_id}`);
                 const productData = await response.json();
                 console.log(productData);
@@ -111,7 +130,6 @@ const addCartToHTML = async () => {
                 const Affichage_name = document.querySelector(`#names_${cart.product_id}`);
                 Affichage_name.innerHTML = names;
 
-                // Ajouter l'image du produit
                 const affichage_image = document.querySelector(`#image_${cart.product_id}`);
                 const image = `<img src="https://api.kedufront.juniortaker.com/item/picture/${cart.product_id}" class="image_0${cart.product_id}"></img>`;
                 affichage_image.insertAdjacentHTML("afterbegin", image);
@@ -138,24 +156,24 @@ listCartHTML.addEventListener('click', (event) => {
 
 const changeQuantity = (product_id, type) => {
     let positionItemInCart = carts.findIndex((value) => value.product_id == product_id);
-    if(positionItemInCart >= 0){
-        // let info = cart[positionItemInCart];
+    if (positionItemInCart >= 0) {
         switch (type) {
             case 'plus':
                 carts[positionItemInCart].quantity = carts[positionItemInCart].quantity + 1;
                 break;
-        
+
             default:
                 let valueChange = carts[positionItemInCart].quantity - 1;
                 if (valueChange > 0) {
                     carts[positionItemInCart].quantity = valueChange;
-                }else{
+                } else {
                     carts.splice(positionItemInCart, 1);
                 }
                 break;
         }
+        saveCartToLocalStorage();
+        addCartToHTML();
     }
-    addCartToHTML();
 }
 
 //Newpage
@@ -167,14 +185,11 @@ listProductHTML.addEventListener('click', (event) => {
     }
 })
 
-
-
-
-//Page ou le client entre les informations nécessaires pour la commande
 listProductHTML.addEventListener('click', (event) => {
     let positionClick = event.target;
     if (positionClick.classList.contains('checkOut')){
         let product_id = positionClick.dataset.id;
+        console.log(product_id);
         clientInfo(product_id);
     }
 })
