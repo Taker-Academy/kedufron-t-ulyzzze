@@ -3,7 +3,6 @@ const newPage = (productId) => {
     fetch(`https://api.kedufront.juniortaker.com/item/${productId}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             // Créer un élément div pour la nouvelle page
             const newPageDiv = document.createElement('div');
             newPageDiv.classList.add('oneItemPage');

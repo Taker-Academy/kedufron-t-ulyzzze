@@ -91,9 +91,10 @@ const addCartToHTML = async () => {
                 // Récupérer les données du produit depuis l'API
                 const response = await fetch(`https://api.kedufront.juniortaker.com/item/${cart.product_id}`);
                 const productData = await response.json();
+                console.log(productData);
 
-                const names = productData.name;
-                const prices = productData.price;
+                const names = productData.item.name;
+                const prices = productData.item.price;
 
                 let newCart = document.createElement('div');
                 newCart.classList.add('item');
