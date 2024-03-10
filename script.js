@@ -185,23 +185,38 @@ listProductHTML.addEventListener('click', (event) => {
     }
 })
 
-listProductHTML.addEventListener('click', (event) => {
-    let positionClick = event.target;
-    if (positionClick.classList.contains('checkOut')){
-        let product_id = positionClick.dataset.id;
-        console.log(product_id);
-        clientInfo(product_id);
-    }
-})
+//Bouton valider la commande
+const boutonCheckOut = document.querySelector('.checkOut');
+boutonCheckOut.addEventListener('click', () => {
+    clientInfo();
+});
 
 //Afficher la page de l'article
-const clientInfo = (productId) => {
+const clientInfo = () => {
     const ClientDiv = document.createElement('div');
     ClientDiv.classList.add('clientInformation');
-    ClientDiv.dataset.id = productId
     ClientDiv.innerHTML = `
-        <div class="testtttt">
-        </div>
+    <i class="fa-solid fa-xmark"></i>
+    <h1>Valider ma commande</h1>
+    <div class="containeur">
+        <p>Adresse email : </p>
+        <form action="" class="search_bar">
+            <input type="text" name="q">
+        </form>
+        <p>Adresse : </p>
+        <form action="" class="search_bar">
+            <input type="text" name="q">
+        </form>
+        <p>Nom de rue : </p>
+        <form action="" class="search_bar">
+            <input type="text" name="q">
+        </form>
+        <p>Prénom et Nom : </p>
+        <form action="" class="search_bar">
+            <input type="text" name="q">
+        </form>
+        <button class="finish_btn">Finaliser ma commande</button>
+    </div>
     `
     document.body.innerHTML = '';
     document.body.appendChild(ClientDiv);
