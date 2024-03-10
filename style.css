@@ -271,3 +271,7 @@ body.showCart .home{
 .listCart .article_1:nth-child(even){
     background-color: var(--second-bg-color);
 }
+
+footer{
+    padding-top: 50px;
+}

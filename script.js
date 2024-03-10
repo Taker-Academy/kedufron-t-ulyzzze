@@ -29,6 +29,7 @@ let body = document.querySelector('body');
 let Close = document.querySelector('.close');
 
 let listProducts = [];
+let cart = [];
 
 Cart.addEventListener('click', () => {
     body.classList.toggle('showCart')
@@ -38,7 +39,7 @@ Close.addEventListener('click', () => {
     body.classList.toggle('showCart')
 })
 
-//Ajouter un produit au panier
+//Savoir quelle produit a était cliqué
 let listProductHTML = document.querySelector('.home');
 
 listProductHTML.addEventListener('click', (event) => {
@@ -53,6 +54,7 @@ let carts = [];
 let listCartHTML = document.querySelector('.listCart');
 let iconCartSpan = document.querySelector('.Cart span');
 
+//Ajouter un produti au panier
 const addToCart = (product_id) => {
     let product_position_in_cart = carts.findIndex((value) => value.product_id == product_id);
     if (carts.length <= 0){
@@ -73,10 +75,12 @@ const addToCart = (product_id) => {
     addCartToMemory();
 }
 
+//Ajouter l'article dans la mémoire (en cours)
 const addCartToMemory = () => {
     localStorage.setItem('cart', JSON.stringify(carts));
 }
 
+//Afficher un produit au panier
 const addCartToHTML = async () => {
     listCartHTML.innerHTML = '';
     let totalQuantity = 0;
@@ -88,8 +92,8 @@ const addCartToHTML = async () => {
                 const response = await fetch(`https://api.kedufront.juniortaker.com/item/${cart.product_id}`);
                 const productData = await response.json();
 
-                const names = productData.name; // Utiliser "names" au lieu de "name"
-                const prices = productData.price; // Utiliser "price" au lieu de "prices"
+                const names = productData.name;
+                const prices = productData.price;
 
                 let newCart = document.createElement('div');
                 newCart.classList.add('item');
@@ -124,21 +128,38 @@ const addCartToHTML = async () => {
     iconCartSpan.innerText = totalQuantity;
 }
 
+
+//Ajouter | Enlever un ou plusieurs articles grâces aux boutons '>' et '<'
 listCartHTML.addEventListener('click', (event) => {
     let positionClick = event.target;
-    console.log("positionClick:", positionClick); // Vérifiez si c'est l'élément attendu
-    if (positionClick.classList.contains('minus') || positionClick.classList.contains('plus')){
-        let product_id = positionClick.parentElement.parentElement.dataset.id;
-        console.log("product_id:", product_id); // Vérifiez la valeur de product_id
+    if(positionClick.classList.contains('minus') || positionClick.classList.contains('plus')){
+        let product_id = positionClick.parentElement.parentElement.parentElement.dataset.id;
+        let type = 'minus';
+        if(positionClick.classList.contains('plus')){
+            type = 'plus';
+        }
+        changeQuantity(product_id, type);
     }
 })
 
-// const initApp = () => {
-//     fetch('products.json')
-//     .then(response => response.json())
-//     .then(data => {
-//         listProducts = data;
-//         addDataToHtml();
-//     })
-// }
-// initApp();
+const changeQuantity = (product_id, type) => {
+    let positionItemInCart = carts.findIndex((value) => value.product_id == product_id);
+    if(positionItemInCart >= 0){
+        // let info = cart[positionItemInCart];
+        switch (type) {
+            case 'plus':
+                carts[positionItemInCart].quantity = carts[positionItemInCart].quantity + 1;
+                break;
+        
+            default:
+                let valueChange = carts[positionItemInCart].quantity - 1;
+                if (valueChange > 0) {
+                    carts[positionItemInCart].quantity = valueChange;
+                }else{
+                    carts.splice(positionItemInCart, 1);
+                }
+                break;
+        }
+    }
+    addCartToHTML();
+}
